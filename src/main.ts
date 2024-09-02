@@ -66,15 +66,18 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   const lambert = new ShaderProgram([
-    new Shader(gl.VERTEX_SHADER, require('./shaders/lambert-vert.glsl')),
+    new Shader(gl.VERTEX_SHADER, require('./shaders/custom-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/lambert-frag.glsl')),
   ]);
 
   // This function will be called every frame
-  function tick() {
+  function tick(timestamp: number) {
+    lambert.setTime(timestamp);
+
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
+
     renderer.clear();
     if(controls.tesselations != prevTesselations)
     {
@@ -108,7 +111,7 @@ function main() {
   camera.updateProjectionMatrix();
 
   // Start the render loop
-  tick();
+  tick(0);
 }
 
 main();
