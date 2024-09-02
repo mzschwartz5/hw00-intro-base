@@ -1,4 +1,4 @@
-import {vec3} from 'gl-matrix';
+import {vec3, vec4} from 'gl-matrix';
 const Stats = require('stats-js');
 import * as DAT from 'dat.gui';
 import Icosphere from './geometry/Icosphere';
@@ -14,6 +14,7 @@ import Cube from './geometry/Cube';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  'Diffuse Color': [255, 0, 0],
 };
 
 let icosphere: Icosphere;
@@ -43,6 +44,7 @@ function main() {
   const gui = new DAT.GUI();
   gui.add(controls, 'tesselations', 0, 8).step(1);
   gui.add(controls, 'Load Scene');
+  gui.addColor(controls, 'Diffuse Color');
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -80,6 +82,10 @@ function main() {
       icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, prevTesselations);
       icosphere.create();
     }
+
+    const diffuseColor = controls['Diffuse Color'];
+    lambert.setGeometryColor(vec4.fromValues(diffuseColor[0] / 255, diffuseColor[1] / 255, diffuseColor[2] / 255, 1.0));
+
     renderer.render(camera, lambert, [
       // icosphere,
       // square,
