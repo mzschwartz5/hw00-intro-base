@@ -23,6 +23,7 @@ in vec4 vs_Col;             // The array of vertex colors passed to the shader.
 out vec4 fs_Nor;            // The array of normals that has been transformed by u_ModelInvTr. This is implicitly passed to the fragment shader.
 out vec4 fs_LightVec;       // The direction in which our virtual light lies, relative to each vertex. This is implicitly passed to the fragment shader.
 out vec4 fs_Col;            // The color of each vertex. This is implicitly passed to the fragment shader.
+out vec4 fs_Pos;            // The position of each vertex.
 
 const vec4 lightPos = vec4(5, 5, 3, 1); //The position of our virtual light, which is used to compute the shading of
                                         //the geometry in the fragment shader.
@@ -47,8 +48,10 @@ void main()
     // Copied from my own work here: https://www.shadertoy.com/view/cltBDr
     float phaseShift = mod(atan(vs_Pos.z, vs_Pos.x) + 2.0*PI, 2.0*PI);
 
-    float modulatedVertPosition = modelposition.y + 0.2 * sin(u_Time/500.0 + phaseShift);
+    float modulatedVertPosition = modelposition.y + 0.2 * sign(modelposition.y) * sin(u_Time/500.0 + phaseShift);
 
     gl_Position = u_ViewProj * vec4(modelposition.x, modulatedVertPosition, modelposition.z, 1.0f);// gl_Position is a built-in variable of OpenGL which is
                                                                                                    // used to render the final positions of the geometry's vertices
+
+    fs_Pos = gl_Position;
 }
